@@ -1,7 +1,7 @@
 # Suggested minimal settings from
 # https://ircama.github.io/osm-carto-tutorials/tile-server-ubuntu/
 
-shared_buffers = 128MB
+shared_buffers = 1GB
 min_wal_size = 1GB
 max_wal_size = 2GB
 maintenance_work_mem = 256MB
@@ -21,5 +21,9 @@ random_page_cost = 1.1
 track_activity_query_size = 16384
 autovacuum_vacuum_scale_factor = 0.05
 autovacuum_analyze_scale_factor = 0.02
+
+effective_io_concurrency = 2
+synchronous_commit = off
+full_page_writes = off
 
 listen_addresses = '*'
