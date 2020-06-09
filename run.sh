@@ -34,11 +34,14 @@ if [ "$1" = "import" ]; then
     createPostgresConfig
     service postgresql start
     sudo -u postgres createuser renderer
-    sudo -u postgres createdb -E UTF8 -O renderer gis
-    sudo -u postgres psql -d gis -c "CREATE EXTENSION postgis;"
-    sudo -u postgres psql -d gis -c "CREATE EXTENSION hstore;"
-    sudo -u postgres psql -d gis -c "ALTER TABLE geometry_columns OWNER TO renderer;"
-    sudo -u postgres psql -d gis -c "ALTER TABLE spatial_ref_sys OWNER TO renderer;"
+    sudo -u postgres createdb -E UTF8 -O renderer osm
+    sudo -u postgres psql -d osm -c "CREATE EXTENSION postgis;"
+    sudo -u postgres psql -d osm -c "CREATE EXTENSION hstore;"
+    sudo -u postgres psql -d osm -c "CREATE EXTENSION unaccent;"
+    sudo -u postgres psql -d osm -c "CREATE EXTENSION fuzzystrmatch;"
+    sudo -u postgres psql -d osm -c "CREATE EXTENSION osml10n;"
+    sudo -u postgres psql -d osm -c "ALTER TABLE geometry_columns OWNER TO renderer;"
+    sudo -u postgres psql -d osm -c "ALTER TABLE spatial_ref_sys OWNER TO renderer;"
     setPostgresPassword
 
     # Download Luxembourg as sample if no data is provided
@@ -73,10 +76,13 @@ if [ "$1" = "import" ]; then
     fi
 
     # Import data
-    sudo -u renderer osm2pgsql -d gis --create --slim -G --hstore --tag-transform-script /home/renderer/src/openstreetmap-carto/openstreetmap-carto.lua --number-processes ${THREADS:-4} -S /home/renderer/src/openstreetmap-carto/openstreetmap-carto.style /data.osm.pbf ${OSM2PGSQL_EXTRA_ARGS}
-
-    # Create indexes
-    sudo -u postgres psql -d gis -f indexes.sql
+    sudo -u renderer osm2pgsql -d osm --create -G --hstore --tag-transform-script /home/renderer/src/openstreetmap-carto/openstreetmap-carto.lua --number-processes ${THREADS:-4} -S /home/renderer/src/openstreetmap-carto/hstore-only.style /data.osm.pbf -p planet_osm_hstore ${OSM2PGSQL_EXTRA_ARGS}
+    sudo -u postgres psql -d osm -f /home/renderer/src/openstreetmap-carto/osm_tag2num.sql
+    sudo -u postgres psql -d osm -f /home/renderer/src/openstreetmap-carto/views_osmde/view-line.sql
+    sudo -u postgres psql -d osm -f /home/renderer/src/openstreetmap-carto/views_osmde/view-point.sql
+    sudo -u postgres psql -d osm -f /home/renderer/src/openstreetmap-carto/views_osmde/view-polygon.sql
+    sudo -u postgres psql -d osm -f /home/renderer/src/openstreetmap-carto/views_osmde/view-roads.sql
+    sudo -u postgres /home/renderer/src/openstreetmap-carto/views_osmde/apply-views.sh osm de
 
     # Register that data has changed for mod_tile caching purposes
     touch /var/lib/mod_tile/planet-import-complete

@@ -74,6 +74,10 @@ RUN apt-get install -y --no-install-recommends \
   unzip \
   wget \
   zlib1g-dev \
+  pandoc \
+  libkakasi2-dev \
+  kakasi \
+  libutf8proc-dev \
 && apt-get clean autoclean \
 && apt-get autoremove --yes \
 && rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -121,10 +125,18 @@ RUN mkdir -p /home/renderer/src \
  && ldconfig \
  && cd ..
 
+RUN mkdir -p /home/renderer/src \
+ && cd /home/renderer/src \
+ && git clone https://github.com/giggls/mapnik-german-l10n.git \
+ && cd mapnik-german-l10n \
+ && rm -rf .git \
+ && make \
+ && make install
+
 # Configure stylesheet
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone --single-branch --branch v4.23.0 https://github.com/gravitystorm/openstreetmap-carto.git --depth 1 \
+ && git clone --single-branch --branch with-river https://github.com/fsievers/openstreetmap-carto-de.git --depth 1 openstreetmap-carto \
  && cd openstreetmap-carto \
  && rm -rf .git \
  && npm install -g carto@0.18.2 \

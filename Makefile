@@ -1,6 +1,6 @@
 .PHONY: build push test
 
-DOCKER_IMAGE=overv/openstreetmap-tile-server
+DOCKER_IMAGE=fsievers/openstreetmap-tile-server
 
 build:
 	docker build -t ${DOCKER_IMAGE} .
