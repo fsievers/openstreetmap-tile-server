@@ -37,6 +37,9 @@ if [ "$1" = "import" ]; then
     sudo -u postgres createdb -E UTF8 -O renderer gis
     sudo -u postgres psql -d gis -c "CREATE EXTENSION postgis;"
     sudo -u postgres psql -d gis -c "CREATE EXTENSION hstore;"
+    sudo -u postgres psql -d gis -c "CREATE EXTENSION unaccent;"
+    sudo -u postgres psql -d gis -c "CREATE EXTENSION fuzzystrmatch;"
+    sudo -u postgres psql -d gis -c "CREATE EXTENSION osml10n;"
     sudo -u postgres psql -d gis -c "ALTER TABLE geometry_columns OWNER TO renderer;"
     sudo -u postgres psql -d gis -c "ALTER TABLE spatial_ref_sys OWNER TO renderer;"
     setPostgresPassword
@@ -77,6 +80,12 @@ if [ "$1" = "import" ]; then
 
     # Create indexes
     sudo -u postgres psql -d gis -f indexes.sql
+
+    sudo -u postgres psql -d gis -f /home/renderer/src/openstreetmap-carto-de/osm_tag2num.sql
+    sudo -u postgres psql -d gis -f /home/renderer/src/openstreetmap-carto-de/contrib/use-upstream-database/view-line.sql
+    sudo -u postgres psql -d gis -f /home/renderer/src/openstreetmap-carto-de/contrib/use-upstream-database/view-point.sql
+    sudo -u postgres psql -d gis -f /home/renderer/src/openstreetmap-carto-de/contrib/use-upstream-database/view-polygon.sql
+    sudo -u postgres psql -d gis -f /home/renderer/src/openstreetmap-carto-de/contrib/use-upstream-database/view-roads.sql
 
     # Register that data has changed for mod_tile caching purposes
     touch /var/lib/mod_tile/planet-import-complete
