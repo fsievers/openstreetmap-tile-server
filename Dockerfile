@@ -164,7 +164,7 @@ RUN mkdir -p /home/renderer/src \
 RUN sed -i 's/renderaccount/renderer/g' /usr/local/etc/renderd.conf \
  && sed -i 's/\/truetype//g' /usr/local/etc/renderd.conf \
  && sed -i 's/hot/tile/g' /usr/local/etc/renderd.conf \
- && echo -e "\n[ajtde]\nURI=/tile-de/\nTILEDIR=/var/lib/mod_tile\nXML=/home/renderer/src/openstreetmap-carto-de/mapnik.xml\nHOST=localhost\nTILESIZE=256\nMAXZOOM=20\n" >> /usr/local/etc/renderd.conf
+ && echo -e "\n[ajtde]\nURI=/tilede/\nTILEDIR=/var/lib/mod_tile\nXML=/home/renderer/src/openstreetmap-carto-de/mapnik.xml\nHOST=localhost\nTILESIZE=256\nMAXZOOM=20\n" >> /usr/local/etc/renderd.conf
 
 # Configure Apache
 RUN mkdir /var/lib/mod_tile \
