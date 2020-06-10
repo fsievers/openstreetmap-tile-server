@@ -74,6 +74,10 @@ RUN apt-get install -y --no-install-recommends \
   unzip \
   wget \
   zlib1g-dev \
+  pandoc \
+  libkakasi2-dev \
+  kakasi \
+  libutf8proc-dev \
 && apt-get clean autoclean \
 && apt-get autoremove --yes \
 && rm -rf /var/lib/{apt,dpkg,cache,log}/
@@ -121,6 +125,14 @@ RUN mkdir -p /home/renderer/src \
  && ldconfig \
  && cd ..
 
+RUN mkdir -p /home/renderer/src \
+ && cd /home/renderer/src \
+ && git clone https://github.com/giggls/mapnik-german-l10n.git \
+ && cd mapnik-german-l10n \
+ && rm -rf .git \
+ && make \
+ && make install
+
 # Configure stylesheet
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
@@ -132,10 +144,27 @@ RUN mkdir -p /home/renderer/src \
  && scripts/get-shapefiles.py \
  && rm /home/renderer/src/openstreetmap-carto/data/*.zip
 
+# Configure stylesheet
+RUN mkdir -p /home/renderer/src \
+ && cd /home/renderer/src \
+ && git clone --single-branch --branch with-river https://github.com/fsievers/openstreetmap-carto-de.git --depth 1 \
+ && cd openstreetmap-carto-de \
+ && rm -rf .git \
+ && npm install -g carto@0.18.2 \
+ && cd ./contrib/use-upstream-database/ \
+ && ./replace-tablenames.sh \
+ && cd ../../ \
+ && sed -e 's!dbname: "osm"!dbname: "gis"!g' project-mod.mml  > project-mod2.mml \
+ && mv project-mod2.mml project-mod.mml \
+ && carto project-mod.mml > mapnik.xml \
+ && scripts/get-shapefiles.py \
+ && rm /home/renderer/src/openstreetmap-carto-de/data/*.zip
+
 # Configure renderd
 RUN sed -i 's/renderaccount/renderer/g' /usr/local/etc/renderd.conf \
  && sed -i 's/\/truetype//g' /usr/local/etc/renderd.conf \
- && sed -i 's/hot/tile/g' /usr/local/etc/renderd.conf
+ && sed -i 's/hot/tile/g' /usr/local/etc/renderd.conf \
+ && echo -e "\n[ajtde]\nURI=/tilede/\nTILEDIR=/var/lib/mod_tile\nXML=/home/renderer/src/openstreetmap-carto-de/mapnik.xml\nHOST=localhost\nTILESIZE=256\nMAXZOOM=20\n" >> /usr/local/etc/renderd.conf
 
 # Configure Apache
 RUN mkdir /var/lib/mod_tile \
@@ -148,6 +177,7 @@ RUN mkdir /var/lib/mod_tile \
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 COPY leaflet-hash.js /var/www/html/leaflet-hash.js
 COPY leaflet-demo.html /var/www/html/index.html
+COPY leaflet-demo.de.html /var/www/html/index.de.html
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
  && ln -sf /dev/stderr /var/log/apache2/error.log
 
