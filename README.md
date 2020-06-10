@@ -19,7 +19,7 @@ Next, download an .osm.pbf extract from geofabrik.de for the region that you're 
 docker run \
     -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    fsievers/openstreetmap-tile-server \
     import
 ```
 
@@ -35,7 +35,7 @@ docker run \
     -v /absolute/path/to/luxembourg.osm.pbf:/data.osm.pbf \
     -v /absolute/path/to/luxembourg.poly:/data.poly \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    fsievers/openstreetmap-tile-server \
     import
 ```
 
@@ -50,7 +50,7 @@ docker run \
     -e DOWNLOAD_PBF=https://download.geofabrik.de/europe/luxembourg-latest.osm.pbf \
     -e DOWNLOAD_POLY=https://download.geofabrik.de/europe/luxembourg.poly \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    overv/openstreetmap-tile-server \
+    fsievers/openstreetmap-tile-server \
     import
 ```
 
@@ -62,7 +62,7 @@ Run the server like this:
 docker run \
     -p 8080:80 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -82,7 +82,7 @@ docker run \
     -p 8080:80 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
     -v openstreetmap-rendered-tiles:/var/lib/mod_tile \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -98,7 +98,7 @@ docker run \
     -e UPDATES=enabled \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
     -v openstreetmap-rendered-tiles:/var/lib/mod_tile \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -113,7 +113,7 @@ docker run \
     -p 8080:80 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
     -e ALLOW_CORS=enabled \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -126,7 +126,7 @@ docker run \
     -p 8080:80 \
     -p 5432:5432 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -144,7 +144,7 @@ docker run \
     -p 5432:5432 \
     -e PGPASSWORD=secret \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -160,7 +160,7 @@ docker run \
     -p 8080:80 \
     -e THREADS=24 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -172,7 +172,7 @@ docker run \
     -p 8080:80 \
     -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -184,7 +184,7 @@ docker run \
     -p 8080:80 \
     -e AUTOVACUUM=off \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 
@@ -198,7 +198,7 @@ docker run \
     -v openstreetmap-nodes:/nodes \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
     -e "OSM2PGSQL_EXTRA_ARGS=--flat-nodes /nodes/flat_nodes.bin" \
-    overv/openstreetmap-tile-server \
+    fsievers/openstreetmap-tile-server \
     import
 ```
 
@@ -223,7 +223,7 @@ docker run \
     -p 8080:80 \
     -v openstreetmap-data:/var/lib/postgresql/12/main \
     --shm-size="192m" \
-    -d overv/openstreetmap-tile-server \
+    -d fsievers/openstreetmap-tile-server \
     run
 ```
 For too high values you may notice excessive CPU load and memory usage. It might be that you will have to experimentally find the best values for yourself.
