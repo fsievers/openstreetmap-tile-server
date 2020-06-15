@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Based on
 # https://switch2osm.org/manually-building-a-tile-server-18-04-lts/
@@ -43,20 +43,19 @@ RUN apt-get install -y --no-install-recommends \
   libgdal-dev \
   libgeos++-dev \
   libgeos-dev \
-  libgeotiff-epsg \
+  libgeotiff5 \
   libicu-dev \
   liblua5.3-dev \
   libmapnik-dev \
   libpq-dev \
   libproj-dev \
-  libprotobuf-c0-dev \
+  libprotobuf-c-dev \
   libtiff5-dev \
   libtool \
   libxml2-dev \
   lua5.3 \
   make \
   mapnik-utils \
-  node-gyp \
   osmium-tool \
   osmosis \
   postgis \
@@ -141,7 +140,7 @@ RUN mkdir -p /home/renderer/src \
  && rm -rf .git \
  && npm install -g carto@0.18.2 \
  && carto project.mml > mapnik.xml \
- && scripts/get-shapefiles.py \
+ && python3 scripts/get-shapefiles.py \
  && rm /home/renderer/src/openstreetmap-carto/data/*.zip
 
 # Configure stylesheet
@@ -157,7 +156,7 @@ RUN mkdir -p /home/renderer/src \
  && sed -e 's!dbname: "osm"!dbname: "gis"!g' project-mod.mml  > project-mod2.mml \
  && mv project-mod2.mml project-mod.mml \
  && carto project-mod.mml > mapnik.xml \
- && scripts/get-shapefiles.py \
+ && python3 scripts/get-shapefiles.py \
  && rm /home/renderer/src/openstreetmap-carto-de/data/*.zip
 
 # Configure renderd
