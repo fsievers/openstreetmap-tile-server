@@ -190,6 +190,10 @@ fi
         m_info "Expiry failed"
     fi
 
+    if ! render_expired --map=ajtde --min-zoom=$EXPIRY_MINZOOM --touch-from=$EXPIRY_TOUCHFROM --delete-from=$EXPIRY_DELETEFROM --max-zoom=$EXPIRY_MAXZOOM -s /var/run/renderd/renderd.sock < "$EXPIRY_FILE.$$" 2>&1 | tail -8 >> "$EXPIRYLOG"; then
+        m_info "Expiry failed"
+    fi
+
     rm "$EXPIRY_FILE.$$"
 
 #------------------------------------------------------------------------------
