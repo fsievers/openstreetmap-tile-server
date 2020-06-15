@@ -43,20 +43,19 @@ RUN apt-get install -y --no-install-recommends \
   libgdal-dev \
   libgeos++-dev \
   libgeos-dev \
-  libgeotiff-epsg \
+  libgeotiff5 \
   libicu-dev \
   liblua5.3-dev \
   libmapnik-dev \
   libpq-dev \
   libproj-dev \
-  libprotobuf-c0-dev \
+  libprotobuf-c-dev \
   libtiff5-dev \
   libtool \
   libxml2-dev \
   lua5.3 \
   make \
   mapnik-utils \
-  node-gyp \
   osmium-tool \
   osmosis \
   postgis \
