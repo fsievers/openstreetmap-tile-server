@@ -98,7 +98,7 @@ RUN adduser --disabled-password --gecos "" renderer
 # Install latest osm2pgsql
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone -b 1.3.0 https://github.com/openstreetmap/osm2pgsql.git --depth 1 \
+ && git clone --single-branch --branch 1.3.0 https://github.com/openstreetmap/osm2pgsql.git --depth 1 \
  && cd /home/renderer/src/osm2pgsql \
  && rm -rf .git \
  && mkdir build \
@@ -113,7 +113,7 @@ RUN mkdir -p /home/renderer/src \
 # Install mod_tile and renderd
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone -b switch2osm https://github.com/SomeoneElseOSM/mod_tile.git --depth 1 \
+ && git clone --single-branch --branch switch2osm https://github.com/SomeoneElseOSM/mod_tile.git --depth 1 \
  && cd mod_tile \
  && rm -rf .git \
  && ./autogen.sh \
@@ -126,7 +126,7 @@ RUN mkdir -p /home/renderer/src \
 
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone -b v2.5.9 https://github.com/giggls/mapnik-german-l10n.git \
+ && git clone --single-branch --branch v2.5.9 https://github.com/giggls/mapnik-german-l10n.git \
  && cd mapnik-german-l10n \
  && rm -rf .git \
  && make \
