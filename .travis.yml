@@ -18,11 +18,13 @@ script:
 after_script:
 - docker images
 after_success:
-- if [[ "$TRAVIS_BRANCH" == "master" ]];
-  then
-  docker images ;
-  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ;
-  docker push fsievers/openstreetmap-tile-server ;
-  fi
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin ;
+- export REPO=$DOCKER_USERNAME/openstreetmap-tile-server
+- export TAG=`if [ “$TRAVIS_BRANCH” == “master” ]; then echo “latest”; else echo $TRAVIS_BRANCH ; fi`
+- echo $REPO:$TAG:$COMMIT
+- docker build -f Dockerfile -t $REPO:$COMMIT .
+- docker tag $REPO:$COMMIT $REPO:$TAG
+- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $REPO
 notifications:
   email: true
