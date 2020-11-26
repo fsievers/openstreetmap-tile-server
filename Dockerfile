@@ -98,7 +98,7 @@ RUN adduser --disabled-password --gecos "" renderer
 # Install latest osm2pgsql
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone -b master https://github.com/openstreetmap/osm2pgsql.git --depth 1 \
+ && git clone -b 1.3.0 https://github.com/openstreetmap/osm2pgsql.git --depth 1 \
  && cd /home/renderer/src/osm2pgsql \
  && rm -rf .git \
  && mkdir build \
@@ -126,7 +126,7 @@ RUN mkdir -p /home/renderer/src \
 
 RUN mkdir -p /home/renderer/src \
  && cd /home/renderer/src \
- && git clone https://github.com/giggls/mapnik-german-l10n.git \
+ && git clone -b v2.5.9 https://github.com/giggls/mapnik-german-l10n.git \
  && cd mapnik-german-l10n \
  && rm -rf .git \
  && make \
